@@ -1,53 +1,96 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.com/docs/use-static-query/
- */
+/* eslint no-unused-expressions:0 */
 
-import React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react';
+import { StaticQuery } from 'gatsby';
+import styled, { ThemeProvider, injectGlobal } from 'styled-components';
+import SEO from '../components/SEO';
+import theme from '../../config/Theme';
+import { media } from '../utils/media';
 
-import Header from "./header"
-import "./layout.css"
-
-const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
+injectGlobal`
+  ::selection {
+    color: ${theme.bg};
+    background: ${theme.primary};
+  }
+  body {
+    background: ${theme.bg};
+    color: ${theme.default};
+    @media ${media.phone} {
+      font-size: 14px;
     }
-  `)
+  }
+  a {
+    color: ${theme.dark};
+    text-decoration: none;
+    transition: all ${theme.transitionTime};
+  }
+  a:hover {
+    color: ${theme.primary};
+  }
+  h1, h2, h3, h4 {
+    color: ${theme.dark};
+  }
+  blockquote {
+    font-style: italic;
+    position: relative;
+  }
 
+  blockquote:before {
+    content: "";
+    position: absolute;
+    background: ${theme.primary};
+    height: 100%;
+    width: 6px;
+    margin-left: -1.6rem;
+  }
+  label {
+    margin-bottom: .5rem;
+    color: ${theme.dark};
+  }
+  input, textarea {
+    border-radius: .5rem;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    padding: .25rem 1rem;
+    &:focus {
+      outline: none;
+    }
+  }
+`;
+
+const Footer = styled.footer`
+  text-align: center;
+  padding: 3rem 0;
+`;
+
+const Layout = props => {
+  const { children } = props;
   return (
-    <>
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main className = 'layout'>{children}</main>
-        <footer style={{
-          marginTop: `2rem`
-        }}>
-          © {new Date().getFullYear()}, Built by a tree with
-          {` `}
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </footer>
-      </div>
-    </>
-  )
-}
+    <StaticQuery
+      query={graphql`
+        query LayoutQuery {
+          site {
+            siteMetadata {
+              buildTime
+            }
+          }
+        }
+      `}
+      render={data => (
+        <ThemeProvider theme={theme}>
+          <React.Fragment>
+            <SEO />
+            {children}
+            <Footer>
+              &copy; 2018 by John Doe. All rights reserved. <br />
+              <a href="https://github.com/LeKoArts/gatsby-starter-minimal-blog">GitHub Repository</a> <br />
+              {data.site.siteMetadata.buildTime}
+            </Footer>;
+          </React.Fragment>
+        </ThemeProvider>
+      )}
+    />
+  );
+};
 
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
-
-export default Layout
+export default Layout;

@@ -1,42 +1,37 @@
-import { Link } from "gatsby"
-import PropTypes from "prop-types"
-import React from "react"
+import React from 'react';
+import styled from 'styled-components';
+import { darken, lighten } from 'polished';
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: 'green',
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
-        </Link>
-      </h1>
-    </div>
-  </header>
-)
+const Wrapper = styled.header`
+  background: linear-gradient(
+    45deg,
+    ${props => darken(0.1, props.theme.primary)},
+    ${props => lighten(0.1, props.theme.primary)}
+  );
+  grid-column: 1 / -1;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  padding: 2rem 2rem 5rem 2rem;
+  box-shadow: inset 0px -10px 30px 0px rgba(0, 0, 0, 0.1);
+`;
 
-Header.propTypes = {
-  siteTitle: PropTypes.string,
-}
+const Content = styled.div`
+  max-width: 1000px;
+  margin: 0 auto;
 
-Header.defaultProps = {
-  siteTitle: ``,
-}
+  a {
+    color: white;
+    &:hover {
+      opacity: 0.85;
+      color: white;
+    }
+  }
+`;
 
-export default Header
+const Header = props => (
+  <Wrapper>
+    <Content>{props.children}</Content>
+  </Wrapper>
+);
+
+export default Header;
